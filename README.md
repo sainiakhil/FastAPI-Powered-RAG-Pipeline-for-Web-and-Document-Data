@@ -12,7 +12,7 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline for proc
 - Performs similarity search over embedded chunks for relevant context.
 - Generates answers using the Qwen-2.5-3B-Instruct model from the retrieved content.
   
-3. nteractive UI:
+3. Interactive UI:
 - Built a user-friendly interface with HTML and JavaScript for easy interaction.
 
 ## Tech Stack
