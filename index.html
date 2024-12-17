@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Processing and Chat Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, button {
+            display: block;
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Content Processing and Chat Service</h1>
+
+    <form id="process-url-form">
+        <h2>Process URL</h2>
+        <label for="url">URL</label>
+        <input type="text" id="url" name="url" placeholder="Enter URL">
+        <button type="submit">Process URL</button>
+    </form>
+
+    <form id="process-pdf-form" enctype="multipart/form-data">
+        <h2>Process PDF</h2>
+        <label for="pdf">PDF File</label>
+        <input type="file" id="pdf" name="pdf">
+        <button type="submit">Process PDF</button>
+    </form>
+
+    <form id="chat-form">
+        <h2>Chat with Content</h2>
+        <label for="source-id">Source ID</label>
+        <input type="text" id="source-id" name="source_id" placeholder="Enter Source ID">
+        <label for="query">Query</label>
+        <textarea id="query" name="query" rows="3" placeholder="Enter your question"></textarea>
+        <button type="submit">Chat</button>
+    </form>
+
+    <div id="response-container" class="response" style="display: none;">
+        <h3>Response</h3>
+        <p id="response-content"></p>
+    </div>
+
+    <script>
+        async function postData(url, data) {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        document.getElementById("process-url-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const url = document.getElementById("url").value;
+            const response = await postData("/process-url", { url });
+            alert(`Processed successfully. Source ID: ${response.source_id}`);
+        });
+
+        document.getElementById("process-pdf-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData();
+            const pdfFile = document.getElementById("pdf").files[0];
+            formData.append("file", pdfFile);
+
+            const response = await fetch("/process-pdf", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            alert(`Processed successfully. Source ID: ${result.source_id}`);
+        });
+
+        document.getElementById("chat-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const sourceId = document.getElementById("source-id").value;
+            const query = document.getElementById("query").value;
+
+            const response = await postData("/chat", { source_id: sourceId, query });
+            document.getElementById("response-content").innerText = response.response;
+            document.getElementById("response-container").style.display = "block";
+        });
+    </script>
+</body>
+</html>
