@@ -14,3 +14,47 @@ This project implements a Retrieval-Augmented Generation (RAG) pipeline for proc
   
 3. nteractive UI:
 - Built a user-friendly interface with HTML and JavaScript for easy interaction.
+
+## Tech Stack
+- Backend: FastAPI
+- Embeddings: Sentence Transformers
+- Language Model: Qwen-2.5-3B-Instruct (via Hugging Face Transformers)
+- Vector Database: ChromaDB
+- Frontend: HTML, JavaScript
+- Dependencies: PyPDF2, BeautifulSoup, Requests, PyTorch, ngrok
+
+## Endpoints
+1. Serve UI:
+-    GET /
+-    Provides the user interface for interacting with the service.
+
+2. Process Web Content:
+-   POST /process-url
+-   Input: JSON with a valid URL.
+-   Action: Extracts, chunks, and stores content in the vector database.
+  
+3. Process PDF Content:
+-  POST /process-pdf
+-  Input: PDF file.
+Action: Extracts, chunks, and stores PDF content.
+
+4. Chat with Processed Content:
+-    POST /chat
+-    Input: Query and Source ID.
+-    Action: Retrieves relevant context and generates a response.
+
+## How It Works
+1. Text Extraction:
+-    Extracts content from user-provided URLs or PDF files.
+  
+2. Chunking and Embedding:
+-    Breaks down content into manageable chunks (500 tokens).
+-    Generates embeddings using Sentence Transformers.
+  
+3. Vector Storage:
+-    Embeddings and chunks are stored in ChromaDB.
+
+4. Similarity Search and Generation:
+-    Performs a similarity search on the query embedding.
+-    Retrieves top chunks, integrates context, and generates responses using Qwen-2.5-3B.
+
